@@ -8,8 +8,6 @@ truncated and the seeded TMS/TDMS/SMMS/COA source systems are never touched.
 
 from __future__ import annotations
 
-from typing import Iterable
-
 from sqlalchemy import delete, or_, select
 from sqlalchemy.orm import Session
 
@@ -185,14 +183,15 @@ def cleanup_synthetic(db: Session) -> dict[str, int]:
     run("planning_task", delete(PlanningTask).where(PlanningTask.id.in_(task_ids)))
     run("block_requirement", delete(BlockRequirement).where(BlockRequirement.id.in_(br_ids)))
 
-    # 9-10. Unified layer.
+    # 9-10. Unified layer. Defect failures are matched by synthetic asset
+    # because the SMMS normalizer re-writes remarks without the marker.
     run(
         "maintenance_requirement",
         delete(MaintenanceRequirement).where(MaintenanceRequirement.id.in_(mr_ids)),
     )
     run(
         "defect_failure",
-        delete(DefectFailure).where(DefectFailure.remarks.like(marker)),
+        delete(DefectFailure).where(DefectFailure.asset_id.in_(syn_asset_ids)),
     )
 
     # 11. Resources.

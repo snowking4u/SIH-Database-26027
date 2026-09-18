@@ -47,7 +47,7 @@ class TMSGenerator:
     def __init__(self, db: Session, cfg: SyntheticConfig, assets: list[AssetInfo]):
         self.db = db
         self.cfg = cfg
-        self.rng: random.Random = cfg.rng
+        self.rng: random.Random = cfg.module_rng(0x3)
         self.assets = assets
 
     def generate(self) -> dict:
@@ -59,12 +59,25 @@ class TMSGenerator:
             self.cfg.defect_count, len(self.assets), self.rng
         )
         for idx, asset in enumerate(self.assets):
+            if self._has_existing(asset.id):
+                continue
             stats["inspections"] += self._inspections_for(asset, per_asset_inspections[idx])
             defects = self._defects_for(asset, defects_per_asset[idx])
             stats["defects"] += defects
             stats["maintenance"] += self._maintenance_for(asset, defects)
         self.db.commit()
         return stats
+
+    def _has_existing(self, asset_id: int) -> bool:
+        return (
+            self.db.scalar(
+                select(TMSInspection.id).where(
+                    TMSInspection.asset_id == asset_id,
+                    TMSInspection.remarks.like(f"%{MARKER}%"),
+                ).limit(1)
+            )
+            is not None
+        )
 
     # ------------------------------------------------------------------ #
     def _window_span(self) -> tuple[datetime, datetime]:

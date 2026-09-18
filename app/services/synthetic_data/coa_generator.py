@@ -57,7 +57,7 @@ class CoaGenerator:
     def __init__(self, db: Session, cfg: SyntheticConfig):
         self.db = db
         self.cfg = cfg
-        self.rng: random.Random = cfg.rng
+        self.rng: random.Random = cfg.module_rng(0x2)
 
     # ------------------------------------------------------------------ #
     # Core generation

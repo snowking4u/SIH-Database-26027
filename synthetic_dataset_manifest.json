@@ -1,0 +1,152 @@
+{
+  "dataset_id": "SYN-STEP11-20260918-0001",
+  "generator_version": "STEP11-1.0",
+  "seed": 42,
+  "scale": "tiny",
+  "scenario": "normal",
+  "start_date": "2026-09-18",
+  "days": 7,
+  "batch_size": 1000,
+  "with_optimization": false,
+  "generation_timestamp": "2026-09-18T18:17:56",
+  "configuration_summary": {
+    "seed": 42,
+    "scale": "tiny",
+    "days": 7,
+    "start_date": "2026-09-18",
+    "scenario": "normal",
+    "batch_size": 1000,
+    "with_optimization": false,
+    "window_template": "normal",
+    "targets": {
+      "assets": 10,
+      "trains": 10,
+      "inspections": 30,
+      "defects": 10,
+      "maintenance": 10,
+      "stations": 3,
+      "resources": 6
+    }
+  },
+  "windows": {
+    "derived": 126,
+    "tagged_as_synthetic": 0
+  },
+  "master_stats": {
+    "locations": 0,
+    "assets": 0,
+    "asset_parameters": 0
+  },
+  "source_stats": {
+    "tms": {
+      "inspections": 0,
+      "defects": 0,
+      "maintenance": 0
+    },
+    "tdms": {
+      "inspections": 0,
+      "failures": 0,
+      "maintenance": 0
+    },
+    "smms": {
+      "inspections": 0,
+      "alerts": 0,
+      "maintenance": 0
+    }
+  },
+  "normalized": {
+    "tms": {
+      "processed": 20,
+      "created": 0,
+      "updated": 0,
+      "skipped": 20
+    },
+    "tdms": {
+      "processed": 21,
+      "created": 0,
+      "updated": 0,
+      "skipped": 21
+    },
+    "smms": {
+      "processed": 20,
+      "created": 0,
+      "updated": 0,
+      "skipped": 20
+    }
+  },
+  "block_requirements": {
+    "requirements_processed": 31,
+    "block_requirements_created": 0,
+    "skipped_no_block_edge": 2,
+    "skipped_existing": 29
+  },
+  "planning": {
+    "resources_created": 0,
+    "task_resources_created": 0,
+    "task_resources_skipped": 62,
+    "dependencies_created": 0,
+    "dependencies_skipped": 17,
+    "planning_tasks": {
+      "processed": 31,
+      "created": 0,
+      "updated": 0,
+      "skipped": 31
+    },
+    "constraints": {
+      "processed": 31,
+      "created": 0,
+      "updated": 0,
+      "skipped": 119
+    }
+  },
+  "candidates": {
+    "processed": 3906,
+    "created": 0,
+    "skipped": 3906,
+    "infeasible": 0,
+    "requires_review": 0
+  },
+  "optimization": {
+    "run_created": 0,
+    "inputs_created": 0,
+    "skipped_run": 0
+  },
+  "table_counts": {
+    "location_master": 6,
+    "asset_master": 10,
+    "asset_parameter": 2,
+    "source_system": 5,
+    "train": 10,
+    "train_schedule": 42,
+    "train_movement": 140,
+    "line_occupancy": 168,
+    "operational_event": 30,
+    "available_window": 126,
+    "tms_inspection": 30,
+    "tms_defect": 10,
+    "tms_maintenance": 10,
+    "tdms_inspection": 30,
+    "tdms_failure": 10,
+    "tdms_maintenance": 11,
+    "smms_inspection": 30,
+    "smms_alert": 10,
+    "smms_maintenance": 10,
+    "defect_failure": 30,
+    "maintenance_requirement": 31,
+    "block_requirement": 29,
+    "planning_task": 31,
+    "planning_constraint": 117,
+    "planning_resource": 6,
+    "task_resource": 62,
+    "task_dependency": 17,
+    "candidate_block_window": 3906,
+    "optimization_run": 0,
+    "optimization_input": 0,
+    "optimization_output": 0,
+    "block_plan": 0,
+    "block_plan_task": 0,
+    "plan_validation": 0,
+    "controller_decision": 0,
+    "execution_outcome": 0
+  }
+}

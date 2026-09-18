@@ -323,6 +323,15 @@ class SyntheticConfig:
             "very_tight": WINDOW_TEMPLATE_VERY_TIGHT,
         }[key]
 
+    def module_rng(self, salt: int) -> random.Random:
+        """Stage-local RNG seeded from the run seed plus a fixed salt.
+
+        Each pipeline stage draws from its own stream, so re-running over an
+        already-populated database reproduces the same decisions without
+        depending on the global consumption order.
+        """
+        return random.Random((self.seed + salt) & 0xFFFFFFFF)
+
     # ------------------------------------------------------------------ #
     # Derived synthetic-data volume targets
     # ------------------------------------------------------------------ #

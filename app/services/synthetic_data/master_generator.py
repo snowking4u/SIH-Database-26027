@@ -83,7 +83,7 @@ class MasterGenerator:
     def __init__(self, db: Session, cfg: SyntheticConfig):
         self.db = db
         self.cfg = cfg
-        self.rng: random.Random = cfg.rng
+        self.rng: random.Random = cfg.module_rng(0x1)
 
     # ------------------------------------------------------------------ #
     # Locations
@@ -147,6 +147,7 @@ class MasterGenerator:
 
         infos: list[AssetInfo] = []
         rows: list[AssetMaster] = []
+        meta: list[tuple] = []
         count = 0
         for n in range(cfg.asset_count):
             source = sources[self.PRIMARY_CHAIN[n % len(self.PRIMARY_CHAIN)]]
@@ -181,25 +182,37 @@ class MasterGenerator:
                 ),
             )
             rows.append(asset)
+            meta.append((station, line, raw_type, source.system_code, ins_date, status))
+            count += 1
+            if count % cfg.batch_size == 0:
+                infos.extend(self._flush_asset_batch(rows, meta))
+        if rows:
+            infos.extend(self._flush_asset_batch(rows, meta))
+        return infos
+
+    def _flush_asset_batch(
+        self, rows: list[AssetMaster], meta: list[tuple]
+    ) -> list[AssetInfo]:
+        # Flush assigns primary keys; AssetInfo requires a real asset id.
+        self.db.add_all(rows)
+        self.db.flush()
+        infos: list[AssetInfo] = []
+        while rows:
+            asset = rows.pop(0)
+            station, line, raw_type, sys_code, ins_date, status = meta.pop(0)
             infos.append(
                 AssetInfo(
                     id=asset.id,
                     station_idx=station,
                     line_idx=line,
-                    station_code=scode,
-                    line_number=lcode,
+                    station_code=station_code(station),
+                    line_number=line_number(station, line),
                     asset_type=raw_type,
-                    source_system_code=source.system_code,
+                    source_system_code=sys_code,
                     installation_date=ins_date,
                     status=status,
                 )
             )
-            count += 1
-            if count % cfg.batch_size == 0:
-                self.db.flush()
-        if rows:
-            self.db.add_all(rows)
-            self.db.flush()
         return infos
 
     def generate_parameters(self, infos: list[AssetInfo]) -> int:

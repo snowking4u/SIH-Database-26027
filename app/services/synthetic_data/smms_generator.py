@@ -56,7 +56,7 @@ class SmmsGenerator:
     def __init__(self, db: Session, cfg: SyntheticConfig, assets: list[AssetInfo]):
         self.db = db
         self.cfg = cfg
-        self.rng: random.Random = cfg.rng
+        self.rng: random.Random = cfg.module_rng(0x5)
         self.assets = assets
 
     def generate(self) -> dict:
@@ -68,11 +68,24 @@ class SmmsGenerator:
             self.cfg.defect_count, len(self.assets), self.rng
         )
         for idx, asset in enumerate(self.assets):
+            if self._has_existing(asset.id):
+                continue
             stats["inspections"] += self._inspections_for(asset, per_asset_inspections[idx])
             stats["alerts"] += self._alerts_for(asset, per_asset_alerts[idx])
             stats["maintenance"] += self._maintenance_for(asset)
         self.db.commit()
         return stats
+
+    def _has_existing(self, asset_id: int) -> bool:
+        return (
+            self.db.scalar(
+                select(SMMSInspection.id).where(
+                    SMMSInspection.asset_id == asset_id,
+                    SMMSInspection.remarks.like(f"%{MARKER}%"),
+                ).limit(1)
+            )
+            is not None
+        )
 
     # ------------------------------------------------------------------ #
     def _window_span(self) -> tuple[datetime, datetime]:

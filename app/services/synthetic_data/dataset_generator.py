@@ -196,8 +196,19 @@ def run_pipeline(db: Session, cfg: SyntheticConfig) -> dict:
 
     coa_gen = CoaGenerator(db, cfg)
     coa_data: CoaData = coa_gen.generate()
-    windows_created = len(derive_available_windows(db))
-    tagged = _tag_windows(db)
+    # derive_available_windows replaces the whole window table. Only run it
+    # when there are no windows yet; on re-runs the existing deterministic
+    # windows are reused so candidate rows keep their FK references intact
+    # (and pre-existing live windows are never destroyed).
+    existing_window_count = db.scalar(
+        select(func.count()).select_from(AvailableWindow)
+    ) or 0
+    if existing_window_count == 0:
+        windows_created = len(derive_available_windows(db))
+        tagged = _tag_windows(db)
+    else:
+        windows_created = existing_window_count
+        tagged = 0
 
     tms = TMSGenerator(db, cfg, assets).generate()
     tdms = TdmsGenerator(db, cfg, assets).generate()
@@ -212,7 +223,7 @@ def run_pipeline(db: Session, cfg: SyntheticConfig) -> dict:
     planning = generate_planning_tasks(db)
     constraints = generate_planning_constraints(db)
 
-    planner = PlanningGenerator(db, cfg, cfg.rng)
+    planner = PlanningGenerator(db, cfg)
     planning_stats = planner.generate()
     planning_stats["planning_tasks"] = planning
     planning_stats["constraints"] = constraints

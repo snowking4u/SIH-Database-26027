@@ -34,7 +34,7 @@ class UnifiedGenerator:
     ):
         self.db = db
         self.cfg = cfg
-        self.rng: random.Random = cfg.rng
+        self.rng: random.Random = cfg.module_rng(0x6)
         self.coa = coa
         self.asset_map = asset_map
 
@@ -65,7 +65,7 @@ class UnifiedGenerator:
     # ------------------------------------------------------------------ #
     def _no_block_edge(self, mr: MaintenanceRequirement) -> bool:
         """Deterministic small share of MRs intentionally left without a BR."""
-        return ru.rand_boolean(self.rng, NO_BLOCK_RATIO)
+        return mr.id % 20 == 7
 
     def _location_for(self, asset_id: int) -> tuple[str, str] | None:
         return self.asset_map.get(asset_id)

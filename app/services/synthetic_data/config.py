@@ -17,7 +17,7 @@ from pathlib import Path
 
 GENERATOR_VERSION = "STEP11-1.0"
 MARKER = "SYNTHETIC_STEP11"
-EXPECTED_ALEMBIC_HEAD = "d2e6b9c4f1a7"
+EXPECTED_ALEMBIC_HEAD = "e1a9c2f3b7d5"
 
 DEFAULT_MANIFEST_NAME = "synthetic_dataset_manifest.json"
 

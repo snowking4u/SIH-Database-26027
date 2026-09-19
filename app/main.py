@@ -5,7 +5,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
-from app.routers import assets, candidates, coa, locations, optimization, planning, smms, source_systems, tdms, tms, unified
+from app.routers import assets, candidates, coa, locations, optimization, planning, planning_priority, smms, source_systems, tdms, tms, unified
 
 
 app = FastAPI(title="SIH 26027 API")
@@ -19,6 +19,7 @@ app.include_router(smms.router)
 app.include_router(coa.router)
 app.include_router(unified.router)
 app.include_router(planning.router)
+app.include_router(planning_priority.router)
 app.include_router(candidates.router)
 app.include_router(optimization.router)
 

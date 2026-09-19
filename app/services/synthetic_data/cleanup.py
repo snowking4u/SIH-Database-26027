@@ -26,6 +26,7 @@ from app.models import (
     OptimizationOutput,
     OptimizationRun,
     PlanningConstraint,
+    PlanningPriority,
     PlanningResource,
     PlanningTask,
     SMMSAlert,
@@ -162,7 +163,11 @@ def cleanup_synthetic(db: Session) -> dict[str, int]:
         ),
     )
 
-    # 5-8. Planning layer.
+    # 5-9. Planning layer.
+    run(
+        "planning_priority",
+        delete(PlanningPriority).where(PlanningPriority.planning_task_id.in_(task_ids)),
+    )
     run(
         "task_dependency",
         delete(TaskDependency).where(

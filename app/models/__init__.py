@@ -17,6 +17,7 @@ from app.models.optimization_output import OptimizationOutput
 from app.models.optimization_run import OptimizationRun
 from app.models.plan_validation import PlanValidation
 from app.models.planning_constraint import PlanningConstraint
+from app.models.planning_priority import PlanningPriority
 from app.models.planning_resource import PlanningResource
 from app.models.planning_task import PlanningTask
 from app.models.smms_alert import SMMSAlert
@@ -55,6 +56,7 @@ __all__ = [
     "OptimizationRun",
     "PlanValidation",
     "PlanningConstraint",
+    "PlanningPriority",
     "PlanningResource",
     "PlanningTask",
     "SMMSAlert",

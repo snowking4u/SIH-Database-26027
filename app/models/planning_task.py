@@ -112,3 +112,9 @@ class PlanningTask(Base):
         back_populates="planning_task",
         passive_deletes=True,
     )
+    priority = relationship(
+        "PlanningPriority",
+        back_populates="planning_task",
+        uselist=False,
+        passive_deletes=True,
+    )
